@@ -1,10 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { createUser } from "../../redux/features/userSlice";
+import Swal from "sweetalert2";
+import { useAddUsersMutation } from "../../redux/features/api/userApi";
 
 const Register = () => {
+  // states
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [addUsers] = useAddUsersMutation();
 
   // form
   const {
@@ -19,19 +25,29 @@ const Register = () => {
     dispatch(createUser({ name, email, password }))
       .unwrap()
       .then((result) => {
+        // sending data in the server
+        const userInfo = { name, email };
+        addUsers(userInfo);
+
+        // showing success alert and navigating the user
+        navigate("/");
         Swal.fire({
           icon: "success",
-          title: "Signup Successful",
+          title: "Register Successful",
           text: `Welcome, ${result.name}! Your account has been created.`,
           confirmButtonText: "OK",
+          background: "black",
+          color: "white",
         });
       })
       .catch((error) => {
         Swal.fire({
           icon: "error",
-          title: "Signup Failed",
+          title: "Register Failed",
           text: error.message || "Something went wrong. Please try again.",
           confirmButtonText: "Retry",
+          background: "black",
+          color: "white",
         });
       });
 

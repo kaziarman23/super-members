@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 
 const initialState = {
@@ -26,10 +26,37 @@ export const createUser = createAsyncThunk(
   }
 );
 
+// login user with email
+export const loginUser = createAsyncThunk(
+  "userSlice/loginUser",
+  async ({ email, password }) => {
+    const data = await signInWithEmailAndPassword(auth, email, password);
+    
+    console.log(data);
+    return {
+      name: data.user.displayName,
+      email: data.user.email,
+    };
+  }
+);
+
 const userSlice = createSlice({
   name: "userSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, { payload }) => {
+      state.name = payload.name;
+      state.email = payload.email;
+    },
+    toggleLoadin: (state, { payload }) => {
+      state.isLoading = payload;
+    },
+    userLogout: (state) => {
+      state.name = "";
+      state.email = "";
+    },
+    
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createUser.pending, (state) => {
@@ -55,5 +82,7 @@ const userSlice = createSlice({
       });
   },
 });
+
+export const { setUser, toggleLoadin, userLogout } = userSlice.actions;
 
 export default userSlice.reducer;

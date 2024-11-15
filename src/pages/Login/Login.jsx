@@ -1,20 +1,50 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { loginUser } from "../../redux/features/userSlice";
 
 const Login = () => {
+  // state
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // form
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
   // handle Submit
   const onSubmit = ({ email, password }) => {
-    console.log({ email, password });
-  };
+    dispatch(loginUser({ email, password }))
+      .unwrap()
+      .then((result) => {
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: `Welcome, ${result.name}! Happy To See You Again.`,
+          confirmButtonText: "OK",
+          color: "white",
+          background: "black",
+        });
+        navigate("/");
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message || "Something went wrong. Please try again.",
+          confirmButtonText: "Retry",
+          background: "black",
+          color: "white",
+        });
+      });
 
+    reset();
+  };
   return (
     <div className="hero h-screen bg-black">
       <div className="hero-content w-full">
