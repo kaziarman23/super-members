@@ -19,7 +19,7 @@ const Navber = () => {
         <li className="p-2 font-bold text-2xl">Members</li>
       </NavLink>
       <NavLink to="/addHero">
-        <li className="p-2 font-bold text-2xl">Add Hero</li>
+        <li className="p-2 font-bold text-2xl">Add-Hero</li>
       </NavLink>
       {email ? (
         <>

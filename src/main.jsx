@@ -9,6 +9,8 @@ import Register from "./pages/Register/Register";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import PrivateRoute from "./pages/PrivateRoute/PrivateRoute";
+import AddHero from "./pages/AddHero/AddHero";
+import UpdateHero from "./pages/UpdateHero/UpdateHero";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,18 @@ const router = createBrowserRouter([
             <Home />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/addHero",
+        element: (
+          <PrivateRoute>
+            <AddHero />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/updateMembers/:id",
+        element: <UpdateHero />,
       },
       {
         path: "/login",
